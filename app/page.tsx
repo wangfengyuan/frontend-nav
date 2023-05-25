@@ -1,4 +1,18 @@
+import { Sidebar } from "@/components/sidebar"
+import getNavLinks from "./links"
+import Image from "next/image"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
+import { LinkContent } from "@/components/link-content"
 
-export default function IndexPage() {
-  return <div className="container grid items-center gap-6 pb-8 pt-6 md:py-10">IndexPage</div>
+export default async function IndexPage() {
+  const navResources = await getNavLinks();
+  return <div className="min-h-screen w-full overflow-x-hidden">
+      <SiteHeader />
+      <div className="flex min-h-screen">
+        <Sidebar navResources={navResources} />
+        <LinkContent navResources={navResources} />
+      </div>
+      <SiteFooter />
+    </div>
 }
