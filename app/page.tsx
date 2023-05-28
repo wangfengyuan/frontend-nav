@@ -1,9 +1,10 @@
 import { Sidebar } from "@/components/sidebar"
 import getNavLinks from "./links"
-import Image from "next/image"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { LinkContent } from "@/components/link-content"
+
+export const revalidate = 24 * 60 * 60;
 
 export default async function IndexPage() {
   const navResources = await getNavLinks();
