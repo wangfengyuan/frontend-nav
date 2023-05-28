@@ -1,5 +1,5 @@
 import prisma from '@/lib/db';
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 export default async function getNavLinks() {
   const res = await prisma.category.findMany({

@@ -1,5 +1,6 @@
 import Image from "next/image"
-import { CategoryWithLinks, Link } from "@/app/links"
+import { CategoryWithLinks } from "@/app/links"
+import { Link } from "@prisma/client"
 
 export function LinkItem({ link }: { link: Link }) {
   return (
