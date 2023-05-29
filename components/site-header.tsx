@@ -5,8 +5,12 @@ import { buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { MainNav } from "@/components/main-nav"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { cn } from "@/lib/utils"
+import { getCurrentUser } from "@/lib/session"
+import { UserAccountNav } from "./user-account-nav"
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const user = await getCurrentUser()
   return (
     <header className="sticky top-0 z-40 w-full bg-background dark:border-slate-50/[0.06] lg:border-b lg:border-slate-900/10">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
@@ -29,6 +33,21 @@ export function SiteHeader() {
               </div>
             </Link>
             <ThemeToggle />
+            {
+              user ? (
+                <UserAccountNav user={user} />
+              ) : (
+                <Link
+                  href="/login"
+                  className={cn(
+                    buttonVariants({ variant: "secondary", size: "sm" }),
+                    "px-4"
+                  )}
+                >
+                  Login
+                </Link>
+              )
+            }
           </nav>
         </div>
       </div>

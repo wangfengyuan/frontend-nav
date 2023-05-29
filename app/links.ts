@@ -7,7 +7,6 @@ export default async function getNavLinks() {
       links: true,
     },
   });
-  console.log(res);
   return res;
 }
 
