@@ -29,6 +29,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   })
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false)
   const searchParams = useSearchParams()
 
   async function onSubmit(data: FormData) {
@@ -98,24 +99,45 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      <button
-        type="button"
-        className={cn(buttonVariants({ variant: "outline" }))}
-        onClick={() => {
-          setIsGitHubLoading(true)
-          signIn("github", {
-            callbackUrl: searchParams?.get("from") || "/",
-          })
-        }}
-        disabled={isLoading || isGitHubLoading}
-      >
-        {isGitHubLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.gitHub className="mr-2 h-4 w-4" />
-        )}{" "}
-        Github
-      </button>
+      <div className="flex flex-col gap-2">
+        <button
+          type="button"
+          className={cn(buttonVariants({ variant: "outline" }))}
+          onClick={() => {
+            setIsGitHubLoading(true)
+            signIn("github", {
+              callbackUrl: searchParams?.get("from") || "/",
+            })
+          }}
+          disabled={isLoading || isGitHubLoading}
+        >
+          {isGitHubLoading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Icons.gitHub className="mr-2 h-4 w-4" />
+          )}{" "}
+          Github
+        </button>
+        <button
+          type="button"
+          className={cn(buttonVariants({ variant: "outline" }))}
+          onClick={() => {
+            setIsGoogleLoading(true)
+            signIn("google", {
+              callbackUrl: searchParams?.get("from") || "/",
+            })
+          }}
+          disabled={isLoading || isGoogleLoading}
+        >
+          {isGoogleLoading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Icons.google className="mr-2 h-4 w-4" />
+          )}{" "}
+          Google
+        </button>
+      </div>
+      
     </div>
   )
 }
