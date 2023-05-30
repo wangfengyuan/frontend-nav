@@ -1,10 +1,10 @@
 import { Icons } from "@/components/icons";
 import { buttonVariants } from "@/components/ui/button";
-import { UserAuthForm } from "@/components/user-login-form";
+import { UserAuthForm } from "@/components/user-auth-form";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
       <Link
@@ -23,20 +23,22 @@ export default function LoginPage() {
         <div className="flex flex-col space-y-2 text-center">
           <Icons.logo className="mx-auto h-6 w-6" />
           <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back
+            Create an account
           </h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+            Create an account with your email and password
           </p>
         </div>
-        <UserAuthForm />
+        <UserAuthForm type="register" />
         <p className="px-8 text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
           <Link
-            href="/register"
-            className="hover:text-brand underline underline-offset-4"
+            href="/login"
+            className="hover:text-brand font-semibold text-gray-800 underline underline-offset-4"
           >
-            Don&apos;t have an account? Sign Up
+            Sign in
           </Link>
+          {" "}instead.
         </p>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { Icons } from "@/components/icons";
 import { buttonVariants } from "@/components/ui/button";
-import { UserAuthForm } from "@/components/user-login-form";
+import { UserAuthForm } from "@/components/user-auth-form";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -29,7 +29,7 @@ export default function LoginPage() {
             Enter your email to sign in to your account
           </p>
         </div>
-        <UserAuthForm />
+        <UserAuthForm type="login" />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
             href="/register"

@@ -21,6 +21,8 @@
     "@radix-ui/react-dropdown-menu": "^2.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-toast": "^1.1.4",
+    "@types/bcrypt": "^5.0.0",
+    "bcrypt": "^5.1.0",
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
