@@ -16,6 +16,7 @@ model Category {
   icon        String
   title       String
   description String
+  rank        Int?
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @default(now()) @map(name: "updated_at")
   links       Link[]
