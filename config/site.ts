@@ -11,7 +11,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "",
-    docs: "https://ui.shadcn.com",
+    github: "https://github.com/wangfengyuan/frontend-nav",
+    docs: "",
   },
 }
