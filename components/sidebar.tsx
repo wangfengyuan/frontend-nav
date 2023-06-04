@@ -2,7 +2,6 @@
 import Image from "next/image"
 
 import { cn } from "@/lib/utils"
-import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Category } from "@prisma/client"
 
@@ -15,11 +14,16 @@ export interface SidebarProps {
 export function Sidebar({ className, navItems }: SidebarProps) {
   const [activeTabId, setActiveTabId] = useState(navItems[0].id);
   useEffect(() => {
-    const hash = window.location.hash.substr(1);
-    setActiveTabId(hash);
-  }, []);
+    const ele = document.getElementById(activeTabId);  
+    const elePosition = (ele?.getBoundingClientRect().top || 0);
+    const offsetPosition = elePosition + window.pageYOffset - 75;
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth"
+    });
+  }, [activeTabId]);
   return (
-      <nav className="after:h-[calc(100vh - 65px)] block min-h-screen w-60 flex-row flex-nowrap bg-gray-50 font-semibold dark:bg-gray-800 sm:bg-background sm:px-6 sm:pb-6">
+      <nav className="after:h-[calc(100vh - 65px)] block min-h-screen w-60 flex-row flex-nowrap bg-gray-50 font-semibold sm:bg-background sm:px-6 sm:pb-6">
         <a href="" className="mx-6 hidden h-16 flex-col items-center justify-center sm:flex">
           <Image
             src="https://cos.codefe.top/images/web-nav-icon.png"
@@ -36,9 +40,8 @@ export function Sidebar({ className, navItems }: SidebarProps) {
                   <div className="space-y-1">
                     { navItems.map((category) => {
                       return (
-                        <Link
-                          href={`#${category.id}`}
-                          className={`block rounded-lg hover:bg-gray-100 ${activeTabId === category.id ? "bg-gray-100 text-purple-500" : "text-primary"}`}
+                        <div
+                          className={`block rounded-lg hover:bg-gray-100 hover:text-purple-500 ${activeTabId === category.id ? "bg-gray-100 text-purple-500" : "text-primary"}`}
                           key={category.id}
                           onClick={() => setActiveTabId(category.id)}
                         >
@@ -54,7 +57,7 @@ export function Sidebar({ className, navItems }: SidebarProps) {
                             </div>
                             <span className="overflow-hidden text-ellipsis whitespace-nowrap">{category.title}</span>
                           </div>
-                        </Link>
+                        </div>
                       )
                     })}
                   </div>
