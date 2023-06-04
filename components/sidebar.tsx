@@ -41,7 +41,7 @@ export function Sidebar({ className, navItems }: SidebarProps) {
                     { navItems.map((category) => {
                       return (
                         <div
-                          className={`block rounded-lg hover:bg-gray-100 hover:text-purple-500 ${activeTabId === category.id ? "bg-gray-100 text-purple-500" : "text-primary"}`}
+                          className={`block cursor-pointer rounded-lg hover:bg-gray-100 hover:text-purple-500 ${activeTabId === category.id ? "bg-gray-100 text-purple-500" : "text-primary"}`}
                           key={category.id}
                           onClick={() => setActiveTabId(category.id)}
                         >

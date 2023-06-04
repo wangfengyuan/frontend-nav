@@ -35,6 +35,7 @@ You can clone & deploy it to Vercel with one click:
 - [x] Authentication
 - [x] Adapt to mobile devices
 - [x] One click deploy
+- [ ] And animation by use Framer Motion 
 - [ ] User like and collection
 
 
