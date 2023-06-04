@@ -22,8 +22,13 @@ Front-end navigation website, used to collect high-quality front-end related web
 - [x] Database concention
 - [x] Authentication
 - [x] Adapt to mobile devices
-- [ ] One click deploy
+- [x] One click deploy
 - [ ] User like and collection
+
+## Deploy Your Own
+You can clone & deploy it to Vercel with one click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwangfengyuan%2Ffrontend-nav&env=DATABASE_URL,GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=DATABASE_URL%E3%80%81CLIENT_ID%E3%80%81CLIENT_SECRET%20are%20used%20to%20store%20user%20infomation&demo-title=Front-end%20navigation%20website&demo-url=https%3A%2F%2Fwebnav.codefe.top%2F&demo-image=https%3A%2F%2Fcos.codefe.top%2Fimages%2Fwebnav-screenshot-demo.png)
 
 
 ## Running Locally
