@@ -8,7 +8,7 @@
 
 Front-end navigation website, used to collect high-quality front-end related websites from both domestic and foreign sources for convenient personal use
 
-> This project is highly inspired by [Taxonomy](https://github.com/shadcn/taxonomy), For learning purpose, to > learn how to build a modern app using Next.js 13(with many features like authentication, API routes, static pages for docs, orm, ...etc)
+> This project is highly inspired by [Taxonomy](https://github.com/shadcn/taxonomy), For learning purpose, to learn how to build a modern app using Next.js 13(with many features like authentication, API routes, static pages for docs, orm, ...etc)
 
 
 ## Features
@@ -52,6 +52,11 @@ pnpm install
 
 ```sh
 cp .env.example .env
+```
+
+3、sync database table
+```sh
+npx prisma db push
 ```
 
 3. Start the development server:
