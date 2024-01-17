@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { Category } from "@prisma/client"
 
 
-export interface SidebarProps { 
+export interface SidebarProps {
   className?: string,
   navItems: Pick<Category, "title" | "icon" | "id">[],
 }
@@ -14,7 +14,7 @@ export interface SidebarProps {
 export function Sidebar({ className, navItems }: SidebarProps) {
   const [activeTabId, setActiveTabId] = useState(navItems[0].id);
   useEffect(() => {
-    const ele = document.getElementById(activeTabId);  
+    const ele = document.getElementById(activeTabId);
     const elePosition = (ele?.getBoundingClientRect().top || 0);
     const offsetPosition = elePosition + window.pageYOffset - 75;
     window.scrollTo({
@@ -23,8 +23,8 @@ export function Sidebar({ className, navItems }: SidebarProps) {
     });
   }, [activeTabId]);
   return (
-      <nav className="after:h-[calc(100vh - 65px)] block min-h-screen w-60 flex-row flex-nowrap bg-gray-50 font-semibold sm:bg-background sm:px-6 sm:pb-6">
-        <a href="" className="mx-6 hidden h-16 flex-col items-center justify-center sm:flex">
+      <nav className="after:h-[calc(100vh - 65px)] block min-h-screen w-60 flex-row flex-nowrap font-semibold sm:bg-background sm:px-6 sm:pb-6">
+        <a href="" className="flex-col items-center justify-center hidden h-16 mx-6 sm:flex">
           <Image
             src="https://cos.codefe.top/images/web-nav-icon.png"
             alt=""
@@ -32,10 +32,10 @@ export function Sidebar({ className, navItems }: SidebarProps) {
             height={60}
           />
         </a>
-        <div className="flex-start relative z-40 flex h-auto w-full flex-1 flex-col overflow-y-auto overflow-x-hidden rounded pt-4 opacity-100">
-          <div className="flex list-none flex-col md:min-w-full md:flex-col">
+        <div className="relative z-40 flex flex-col flex-1 w-full h-auto pt-4 overflow-x-hidden overflow-y-auto rounded opacity-100 flex-start">
+          <div className="flex flex-col list-none md:min-w-full md:flex-col">
             <div className={cn("flex-none pb-12", className)}>
-              <div className="space-y-4 pb-4">
+              <div className="pb-4 space-y-4">
                 <div className="py-2">
                   <div className="space-y-1">
                     { navItems.map((category) => {
