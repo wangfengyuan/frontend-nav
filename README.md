@@ -54,12 +54,13 @@ pnpm install
 cp .env.example .env
 ```
 
-3、sync database table
+3. sync database table and add some data
 ```sh
 npx prisma db push
+pnpm run seed
 ```
 
-3. Start the development server:
+4. Start the development server:
 
 ```sh
 pnpm dev
