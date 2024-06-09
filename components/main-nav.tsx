@@ -1,11 +1,22 @@
 "use client"
+
 import * as React from "react"
 import Link from "next/link"
 
 import { NavItem } from "@/types/nav"
 import { cn } from "@/lib/utils"
+
 import { Icons } from "./icons"
-import { MobileSidebar } from "./mobile-sidebar"
+import { Sidebar } from "./sidebar"
+import { Button } from "./ui/button"
+import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "./ui/drawer"
 
 interface MainNavProps {
   items?: NavItem[]
@@ -13,34 +24,40 @@ interface MainNavProps {
 }
 
 export function MainNav({ items, navItems }: MainNavProps) {
-  const [showMobileSidebar, setShowMobileSidebar] = React.useState<boolean>(false)
   return (
     <>
-      <div className="flex gap-6 md:gap-10">
-        <div className="sm:hidden" onClick={() => setShowMobileSidebar(!showMobileSidebar)}>
-          <Icons.menu />
-        </div>
-        {items?.length ? (
-          <nav className="hidden gap-6 md:flex">
-            {items?.map(
-              (item, index) =>
-                item.href && (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center text-lg font-semibold text-muted-foreground sm:text-sm",
-                      item.disabled && "cursor-not-allowed opacity-80"
-                    )}
-                  >
-                    {item.title}
-                  </Link>
-                )
-            )}
-          </nav>
-        ) : null}
-      </div>
-      { showMobileSidebar && <MobileSidebar navItems={navItems} setShowMobileSidebar={setShowMobileSidebar} /> }
+      <Drawer direction="left" noBodyStyles>
+        <DrawerTrigger asChild>
+          <Button variant="outline" size="sm" className="px-2">
+            <Icons.menu className="size-5" />
+          </Button>
+        </DrawerTrigger>
+        <DrawerContent className="h-screen w-3/5 rounded-none">
+          <div className="mx-auto w-full max-w-sm">
+            <DrawerHeader>
+              <DrawerTitle>WebNav</DrawerTitle>
+            </DrawerHeader>
+            <Sidebar navItems={navItems} />
+            <DrawerFooter>
+              <div className="text-center">
+                {items?.map((item, index) => {
+                  return (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      className={cn(
+                        "block rounded-md px-3 py-2 text-lg font-medium"
+                      )}
+                    >
+                      {item.title}
+                    </Link>
+                  )
+                })}
+              </div>
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </>
   )
 }

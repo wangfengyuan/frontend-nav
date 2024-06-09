@@ -29,7 +29,7 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
   } = useForm<FormData>({
     resolver: zodResolver(userAuthSchema),
   })
-  const router = useRouter();
+  const router = useRouter()
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
@@ -39,7 +39,7 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
   async function onSubmit(data: FormData) {
     setIsLoading(true)
 
-    const { email, password } = data;
+    const { email, password } = data
     if (type === "login") {
       const signInResult = await signIn("credentials", {
         email: email.toLowerCase(),
@@ -48,16 +48,15 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
         callbackUrl: searchParams?.get("from") || "/dashboard",
       })
       if (signInResult?.error) {
-        setIsLoading(false);
+        setIsLoading(false)
         return toast({
           title: "Something went wrong.",
           description: signInResult?.error,
           variant: "destructive",
         })
       }
-      router.refresh();
-      router.push("/");
-
+      router.refresh()
+      router.push("/")
     } else {
       const res = await fetch("/api/register", {
         method: "POST",
@@ -73,17 +72,17 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
         toast({
           title: "Sign up Success",
           description: "ccount created! Redirecting to homepage...",
-        });
+        })
         setTimeout(() => {
-          router.push("/");
-        }, 2000);
+          router.push("/")
+        }, 2000)
       } else {
-        const { error } = await res.json();
+        const { error } = await res.json()
         toast({
           title: "Something went wrong.",
           description: error,
           variant: "destructive",
-        });
+        })
       }
     }
 
@@ -136,9 +135,9 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
           </div>
           <button className={cn(buttonVariants())} disabled={isLoading}>
             {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              <Icons.spinner className="mr-2 size-4 animate-spin" />
             )}
-            { type === "register" ? "Sign up" : "Sign in" }
+            {type === "register" ? "Sign up" : "Sign in"}
           </button>
         </div>
       </form>
@@ -165,9 +164,9 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
           disabled={isLoading || isGitHubLoading}
         >
           {isGitHubLoading ? (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            <Icons.spinner className="mr-2 size-4 animate-spin" />
           ) : (
-            <Icons.gitHub className="mr-2 h-4 w-4" />
+            <Icons.gitHub className="mr-2 size-4" />
           )}{" "}
           Github
         </button>
@@ -183,14 +182,13 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
           disabled={isLoading || isGoogleLoading}
         >
           {isGoogleLoading ? (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            <Icons.spinner className="mr-2 size-4 animate-spin" />
           ) : (
-            <Icons.google className="mr-2 h-4 w-4" />
+            <Icons.google className="mr-2 size-4" />
           )}{" "}
           Google
         </button>
       </div>
-      
     </div>
   )
 }

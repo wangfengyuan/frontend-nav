@@ -1,12 +1,12 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-import { compare } from "bcrypt";
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+import { compare } from "bcrypt"
+import NextAuth, { type NextAuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import GitHubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -28,27 +28,27 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const { email, password } = credentials ?? {}
         if (!email || !password) {
-          throw new Error("Missing username or password");
+          throw new Error("Missing username or password")
         }
         const user = await prisma.user.findUnique({
           where: {
             email: credentials?.email,
           },
-        });
+        })
         // if user doesn't exist or password doesn't match
         if (!user || !(await compare(password, user.password!))) {
-          throw new Error("Invalid username or password");
+          throw new Error("Invalid username or password")
         }
-        return user;
+        return user
       },
-    })
+    }),
   ],
   session: {
     strategy: "jwt",
   },
   debug: process.env.NODE_ENV !== "production",
-};
+}
 
-const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST }

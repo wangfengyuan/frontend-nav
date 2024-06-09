@@ -1,16 +1,18 @@
-import prisma from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server"
+
+import prisma from "@/lib/db"
+
 export async function GET() {
   const links = await prisma.category.findMany({
     orderBy: [
       {
-        rank: 'asc',
-      }
+        rank: "asc",
+      },
     ],
     include: {
       links: {
         orderBy: {
-          rank: 'asc',
+          rank: "asc",
         },
         where: {
           public: true,
@@ -18,6 +20,6 @@ export async function GET() {
         },
       },
     },
-  });
-  return NextResponse.json(links);
+  })
+  return NextResponse.json(links)
 }
