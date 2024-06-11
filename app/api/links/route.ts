@@ -27,10 +27,11 @@ export async function GET() {
 export async function POST(request: Request) {
   const info = await request.json()
   console.log(info)
-  const category = await prisma.link.create({
+  const link = await prisma.link.create({
     data: {
       ...info,
+      status: 0,
     },
   })
-  return NextResponse.json(category)
+  return NextResponse.json(link)
 }

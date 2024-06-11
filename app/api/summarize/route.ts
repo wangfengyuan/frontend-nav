@@ -65,6 +65,9 @@ export async function GET(request: Request) {
   //   )
   // }
 
+  const urlRes = await extractWebsiteInfo(url)
+  console.log(urlRes?.meta)
+
   const res = {
     title: "GitHub",
     description:

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `link` MODIFY `icon` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `screenshot_url` VARCHAR(191) NOT NULL DEFAULT '';

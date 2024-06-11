@@ -65,6 +65,13 @@ export async function extractWebsiteInfo(url: string) {
       ensureSecureImageRequest: true,
     })
     const { title, description, favicons } = metadata
+    const faviconHref = (
+      favicons.find((f: any) => f.rel === "mask_icon" || f.rel === "icon") || {}
+    ).href
+    const hostname = new URL(url).hostname
+    const favicon = faviconHref.startsWith("http")
+      ? faviconHref
+      : hostname + faviconHref
 
     return {
       htmlContent,
@@ -110,7 +117,7 @@ export async function extractWebsiteInfo(url: string) {
       meta: {
         title,
         description,
-        favicons,
+        favicon,
         og_image: metadata["og:image"],
       },
     }

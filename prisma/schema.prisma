@@ -14,7 +14,7 @@ model Category {
   id          String   @id @default(cuid())
   icon        String
   title       String
-  description String
+  description String   @db.Text
   rank        Int?
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @default(now()) @map(name: "updated_at")
@@ -24,38 +24,39 @@ model Category {
 }
 
 model Link {
-  id          String   @id @default(cuid())
-  icon        String
-  url         String
-  title       String
-  description String
-  rank        Int?
-  public      Boolean  @default(true)
-  status      Int      @default(1) @db.TinyInt
-  createdAt   DateTime @default(now()) @map(name: "created_at")
-  updatedAt   DateTime @default(now()) @map(name: "updated_at")
-  cid         String
-  catagory    Category @relation(fields: [cid], references: [id])
+  id             String   @id @default(cuid())
+  icon           String   @default("")
+  url            String   @unique
+  title          String
+  description    String   @db.Text
+  rank           Int?
+  public         Boolean  @default(true)
+  status         Int      @default(1) @db.TinyInt
+  screenshot_url String   @default("")
+  createdAt      DateTime @default(now()) @map(name: "created_at")
+  updatedAt      DateTime @default(now()) @map(name: "updated_at")
+  cid            String
+  catagory       Category @relation(fields: [cid], references: [id])
 
   @@map(name: "link")
 }
 
 model Account {
-  id                String   @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
-  expires_at        Int?
+  id                       String   @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?  @db.Text
+  access_token             String?  @db.Text
+  expires_at               Int?
   refresh_token_expires_in Int?
-  token_type        String?
-  scope             String?
-  id_token          String?  @db.Text
-  session_state     String?
-  createdAt         DateTime @default(now()) @map(name: "created_at")
-  updatedAt         DateTime @default(now()) @map(name: "updated_at")
+  token_type               String?
+  scope                    String?
+  id_token                 String?  @db.Text
+  session_state            String?
+  createdAt                DateTime @default(now()) @map(name: "created_at")
+  updatedAt                DateTime @default(now()) @map(name: "updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -90,7 +91,7 @@ model User {
 }
 
 model VerificationToken {
-  id         Int   @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   identifier String
   token      String   @unique
   expires    DateTime

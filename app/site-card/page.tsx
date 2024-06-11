@@ -2,6 +2,8 @@
 "use client"
 
 import { useCallback, useMemo, useRef, useState } from "react"
+import Image from "next/image"
+import { Category } from "@prisma/client"
 import domtoimage from "dom-to-image"
 import { Loader2 } from "lucide-react"
 import { useQRCode } from "next-qrcode"
@@ -30,6 +32,7 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { toast } from "@/components/ui/use-toast"
 
 enum BG_COLOR_TYPE {
   /** 渐变 */
@@ -42,8 +45,9 @@ export default function SummarizePage() {
   const [url, setUrl] = useState("https://github.com")
   const componentRef = useRef<HTMLDivElement | null>(null)
   const [loading, setLoading] = useState(false)
-  const [categorys, setCategorys] = useState([])
+  const [categorys, setCategorys] = useState<Category[]>([])
   const [chooseCategoryId, setChooseCategoryId] = useState("")
+  const [openSubmitDialog, setOpenSubmitDialog] = useState(false)
   const [exportConfig, setExportConfig] = useState({
     title: "",
     description: "",
@@ -54,6 +58,7 @@ export default function SummarizePage() {
     showQrCode: false,
     font: "font-sans",
     bgColorType: BG_COLOR_TYPE.gradient,
+    favicon: "",
   })
   const isHorizontalOrientation = useMemo(() => {
     const [w, h] = exportConfig.aspectRatio.split("/")
@@ -91,7 +96,6 @@ export default function SummarizePage() {
   }
   const downloadImage = async () => {
     const element = componentRef.current!
-    console.log(element, element.offsetWidth, element.offsetHeight)
     let data = await domtoimage.toPng(componentRef.current, {
       height: element.offsetHeight * 3,
       width: element.offsetWidth * 3,
@@ -108,13 +112,12 @@ export default function SummarizePage() {
     if (!open) return
     const response = await fetch("/api/links")
     const res = await response.json()
-    console.log(res)
     setCategorys(res)
     setChooseCategoryId(res[0].id)
   }
 
   const handleSubmit = async () => {
-    const { title, description, screenshot_url } = exportConfig
+    const { title, description, screenshot_url, favicon } = exportConfig
     const response = await fetch("/api/links", {
       method: "POST",
       headers: {
@@ -123,18 +126,22 @@ export default function SummarizePage() {
       body: JSON.stringify({
         title,
         description,
-        // screenshot_url,
+        screenshot_url,
         cid: chooseCategoryId,
         url,
-        icon: "",
+        icon: favicon,
       }),
     })
     const res = await response.json()
-    console.log(res)
+    toast({
+      title: "Success",
+      description: "Your site info has been submitted.",
+    })
+    setOpenSubmitDialog(false)
   }
 
   return (
-    <div className="relative z-20 flex size-full h-full flex-col items-center pb-12 pt-20 text-primary">
+    <div className="relative z-20 flex size-full h-full flex-col items-center pb-12 pt-10 text-primary">
       <div className="absolute top-0 -z-10 size-full bg-background">
         <div className="absolute bottom-auto left-auto right-0 top-0 size-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div>
       </div>
@@ -189,7 +196,7 @@ export default function SummarizePage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>截图地址</Label>
+                <Label>截图</Label>
                 <Input
                   value={exportConfig.screenshot_url}
                   onChange={(e) =>
@@ -252,7 +259,7 @@ export default function SummarizePage() {
                             randomColors: generateRandomGradient(),
                           })
                         }
-                        className="flex items-center gap-2 hover:text-purple-500"
+                        className="flex cursor-pointer items-center gap-2 hover:text-purple-500"
                       >
                         <svg
                           width="14"
@@ -317,64 +324,60 @@ export default function SummarizePage() {
                 />
               </div>
             </div>
-            <div className="flex items-center">
+            <div
+              className={cn(
+                "relative mx-auto flex w-full items-center justify-center overflow-hidden",
+                exportConfig.font
+              )}
+              ref={componentRef}
+            >
               <div
                 className={cn(
-                  "relative mx-auto w-full overflow-hidden",
-                  exportConfig.font
+                  "flex items-center justify-center gap-6 rounded-lg bg-gradient-to-b p-8",
+                  isHorizontalOrientation ? "w-[720px]" : "w-[360px] flex-col",
+                  exportConfig.bgColorType === BG_COLOR_TYPE.gradient
+                    ? [...exportConfig.randomColors]
+                    : ""
                 )}
-                ref={componentRef}
+                style={{
+                  aspectRatio: exportConfig.aspectRatio,
+                  backgroundColor:
+                    exportConfig.bgColorType === BG_COLOR_TYPE.single
+                      ? exportConfig.singleColor
+                      : undefined,
+                }}
               >
-                <div
-                  className={cn(
-                    "flex items-center gap-6 rounded-lg bg-gradient-to-b p-8",
-                    isHorizontalOrientation
-                      ? "w-[720px]"
-                      : "w-[360px] flex-col",
-                    exportConfig.bgColorType === BG_COLOR_TYPE.gradient
-                      ? [...exportConfig.randomColors]
-                      : ""
-                  )}
-                  style={{
-                    aspectRatio: exportConfig.aspectRatio,
-                    backgroundColor:
-                      exportConfig.bgColorType === BG_COLOR_TYPE.single
-                        ? exportConfig.singleColor
-                        : undefined,
-                  }}
-                >
-                  <div className="text-center text-white">
-                    <h1 className="mb-2 text-3xl font-semibold">
-                      {exportConfig.title}
-                    </h1>
-                    <p className="line-clamp-5 overflow-hidden text-ellipsis break-all text-lg">
-                      {exportConfig.description}
-                    </p>
+                <div className="text-center text-white">
+                  <h1 className="mb-2 text-3xl font-semibold">
+                    {exportConfig.title}
+                  </h1>
+                  <p className="line-clamp-5 overflow-hidden text-ellipsis break-all text-lg">
+                    {exportConfig.description}
+                  </p>
+                </div>
+                <div>
+                  <div className="width-[260px] aspect-video">
+                    {/* TODO 这里使用Image标签，导出图片无该图片，先使用img标签 */}
+                    <img
+                      src={exportConfig.screenshot_url}
+                      width={260}
+                      height={260}
+                      alt="screenshot"
+                      className="w-full rounded-md"
+                    />
                   </div>
-                  <div>
-                    <div className="size-[260px]">
-                      {/* TODO 这里使用Image标签，导出图片无该图片，先使用img标签 */}
-                      <img
-                        src={exportConfig.screenshot_url}
-                        width={260}
-                        height={260}
-                        alt="screenshot"
-                        className="w-full rounded-md"
+                  {exportConfig.showQrCode && (
+                    <div className="mt-4 flex items-center justify-center">
+                      <Canvas
+                        text={url}
+                        options={{
+                          errorCorrectionLevel: "M",
+                          width: 60,
+                          margin: 2,
+                        }}
                       />
                     </div>
-                    {exportConfig.showQrCode && (
-                      <div className="mt-4 flex items-center justify-center">
-                        <Canvas
-                          text={url}
-                          options={{
-                            errorCorrectionLevel: "M",
-                            width: 60,
-                            margin: 2,
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -387,9 +390,16 @@ export default function SummarizePage() {
             >
               Download
             </Button>
-            <Dialog onOpenChange={handleOpenSubmitDialog}>
+            <Dialog
+              onOpenChange={handleOpenSubmitDialog}
+              open={openSubmitDialog}
+            >
               <DialogTrigger asChild>
-                <Button className="w-56 px-2" disabled={loading}>
+                <Button
+                  className="w-56 px-2"
+                  disabled={loading}
+                  onClick={() => setOpenSubmitDialog(true)}
+                >
                   request to add webnav
                 </Button>
               </DialogTrigger>
@@ -415,7 +425,16 @@ export default function SummarizePage() {
                         <SelectGroup>
                           {categorys.map((item) => (
                             <SelectItem key={item.id} value={item.id}>
-                              {item.title}
+                              <div className="flex items-center">
+                                <Image
+                                  src={item.icon}
+                                  alt={item.title}
+                                  width={24}
+                                  height={24}
+                                  className="mr-2"
+                                />
+                                {item.title}
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -424,6 +443,12 @@ export default function SummarizePage() {
                   </div>
                 </div>
                 <DialogFooter>
+                  <Button
+                    type="submit"
+                    onClick={() => setOpenSubmitDialog(false)}
+                  >
+                    Cancel
+                  </Button>
                   <Button type="submit" onClick={handleSubmit}>
                     Submit
                   </Button>
