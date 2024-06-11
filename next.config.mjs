@@ -3,10 +3,14 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     appDir: true,
+    serverComponentsExternalPackages: [
+      "puppeteer-core",
+      "@sparticuz/chromium-min",
+    ],
   },
   images: {
-    domains: ['cos.codefe.top'],
-  }
+    domains: ["cos.codefe.top", "webnav-cdn.codefe.top"],
+  },
 }
 
 export default nextConfig

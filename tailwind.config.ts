@@ -1,13 +1,28 @@
 import type { Config } from "tailwindcss"
 
+import { colors, shades } from "./lib/utils"
+
+const reg = new RegExp(
+  `^(from|to)-(${colors.join("|")})-(${shades.join("|")})$`
+)
+
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+  safelist: [
+    {
+      // 根据colors和shades生成对应的正则匹配
+      pattern: reg,
+    },
+    {
+      pattern: /^aspect-/,
+    },
+  ],
   prefix: "",
   theme: {
     container: {
@@ -71,6 +86,13 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      aspectRatio: {
+        "4/3": "4 / 3",
+        "16/9": "16 / 9",
+        "3/4": "3 / 4",
+        "1/1": "1 / 1",
+        "9/16": "9 / 16",
       },
     },
   },

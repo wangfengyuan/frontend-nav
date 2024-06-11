@@ -15,14 +15,14 @@ import { UserAccountNav } from "./user-account-nav"
 export async function SiteHeader({ navItems }: SidebarProps) {
   const user = await getCurrentUser()
   return (
-    <header className="sticky top-0 z-40 w-full bg-background pl-4 pr-6 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:border-slate-50/[0.06]">
+    <header className="bg-background supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full pl-4 pr-6 backdrop-blur">
       <div className=" flex h-16 items-center sm:justify-between sm:space-x-0">
         <div className="block sm:hidden">
           <MainNav items={siteConfig.mainNav} navItems={navItems} />
         </div>
         <div className="hidden items-center sm:flex">
           <a
-            href=""
+            href="/"
             className="mr-6 hidden h-16 flex-col items-center justify-center sm:flex"
           >
             <Image
