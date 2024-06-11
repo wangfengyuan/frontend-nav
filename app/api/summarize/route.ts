@@ -13,8 +13,6 @@ const s3 = new S3({
   signatureVersion: "v4",
 })
 
-export const maxDuration = 60
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const url = searchParams.get("url")
