@@ -23,3 +23,14 @@ export async function GET() {
   })
   return NextResponse.json(links)
 }
+
+export async function POST(request: Request) {
+  const info = await request.json()
+  console.log(info)
+  const category = await prisma.link.create({
+    data: {
+      ...info,
+    },
+  })
+  return NextResponse.json(category)
+}

@@ -1,13 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import domtoimage from "dom-to-image"
-import { Loader2, Shuffle } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useQRCode } from "next-qrcode"
+import slugify from "slugify"
 
 import { cn, generateRandomGradient } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -15,18 +25,11 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-
-type WebsiteInfo = {
-  title: string
-  description: string
-  screenshot_url: string
-}
 
 enum BG_COLOR_TYPE {
   /** 渐变 */
@@ -37,11 +40,10 @@ enum BG_COLOR_TYPE {
 
 export default function SummarizePage() {
   const [url, setUrl] = useState("https://github.com")
-  const [randomColors, setRandomColors] = useState<string[]>(
-    generateRandomGradient()
-  )
   const componentRef = useRef<HTMLDivElement | null>(null)
   const [loading, setLoading] = useState(false)
+  const [categorys, setCategorys] = useState([])
+  const [chooseCategoryId, setChooseCategoryId] = useState("")
   const [exportConfig, setExportConfig] = useState({
     title: "",
     description: "",
@@ -58,7 +60,7 @@ export default function SummarizePage() {
     return parseInt(w) >= parseInt(h)
   }, [exportConfig.aspectRatio])
   const { Canvas } = useQRCode()
-  const handleSubmit = useCallback(
+  const handleGenerate = useCallback(
     async (e: any) => {
       e.preventDefault()
       if (!url) {
@@ -66,7 +68,7 @@ export default function SummarizePage() {
       }
       try {
         setLoading(true)
-        const response = await fetch(`/api/screenshot?url=${url}`)
+        const response = await fetch(`/api/summarize?url=${url}`)
         const res = await response.json()
         setExportConfig({
           ...exportConfig,
@@ -77,12 +79,12 @@ export default function SummarizePage() {
         setLoading(false)
       }
     },
-    [url]
+    [url, exportConfig]
   )
   async function saveImage(data: string) {
     const a = document.createElement("a")
     a.href = data
-    a.download = `cover.png`
+    a.download = `${slugify(url)}.png`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -102,36 +104,38 @@ export default function SummarizePage() {
     })
     await saveImage(data)
   }
-
-  const handlerUpload = async () => {
-    const img = new Image()
-    img.src =
-      "https://storage.googleapis.com/reader-6b7dc.appspot.com/screenshots/ec5ca22e-7d91-476e-9549-6e25446be676?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=563569098173-compute%40developer.gserviceaccount.com%2F20240610%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20240610T100306Z&X-Goog-Expires=14400&X-Goog-SignedHeaders=host&X-Goog-Signature=2af060a7de9f88a97020b9ded7e1b8b54f8764573357755af26bf16b48e662cafbbc2f3cc61866c1f3b014c28c39198fd621fe2541f1631896aa61aec2e4ed3b71875a88c942ab27c444e54d2a5f6f0b4d427e6b788c17b941d0662721a4e7e82c06ea5abb029a9d5c29229476b515b06fef4ec8efb2db51302b9f01e39f5220de6ed7c358cfd3b0f3b5f5911fef6fa82000abe8e6650e2d949b06514b30073a0d2910369f202d8281b7182c7bd2f616ef753e6542b876922235e010d9372d2375c74e9383ad8c6410b9774abf53d008b4990ecc0381951d587f378979e1452aa15d7ccb6f0ff6fb84f49ebb1e4ad7fe010e08b2abc3fb78a7129c95e2ae0aee"
-    img.onload = () => {
-      console.log(img.width, img.height)
-      // 创建一个Canvas元素
-      const canvas = document.createElement("canvas")
-      const ctx = canvas.getContext("2d")!
-      // 将图片绘制到Canvas上
-      ctx.drawImage(img, 0, 0)
-
-      // 将Canvas上的图片转换为Blob对象
-      canvas.toDataURL("image/png")
-    }
+  const handleOpenSubmitDialog = async (open: boolean) => {
+    if (!open) return
+    const response = await fetch("/api/links")
+    const res = await response.json()
+    console.log(res)
+    setCategorys(res)
+    setChooseCategoryId(res[0].id)
   }
-  useEffect(() => {
-    handlerUpload()
-  }, [])
+
+  const handleSubmit = async () => {
+    const { title, description, screenshot_url } = exportConfig
+    const response = await fetch("/api/links", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        // screenshot_url,
+        cid: chooseCategoryId,
+        url,
+        icon: "",
+      }),
+    })
+    const res = await response.json()
+    console.log(res)
+  }
+
   return (
-    <div className="text-primary relative z-20 flex size-full h-full flex-col items-center pb-12 pt-20">
-      <img
-        src="https://storage.googleapis.com/reader-6b7dc.appspot.com/screenshots/ec5ca22e-7d91-476e-9549-6e25446be676?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=563569098173-compute%40developer.gserviceaccount.com%2F20240610%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20240610T100306Z&X-Goog-Expires=14400&X-Goog-SignedHeaders=host&X-Goog-Signature=2af060a7de9f88a97020b9ded7e1b8b54f8764573357755af26bf16b48e662cafbbc2f3cc61866c1f3b014c28c39198fd621fe2541f1631896aa61aec2e4ed3b71875a88c942ab27c444e54d2a5f6f0b4d427e6b788c17b941d0662721a4e7e82c06ea5abb029a9d5c29229476b515b06fef4ec8efb2db51302b9f01e39f5220de6ed7c358cfd3b0f3b5f5911fef6fa82000abe8e6650e2d949b06514b30073a0d2910369f202d8281b7182c7bd2f616ef753e6542b876922235e010d9372d2375c74e9383ad8c6410b9774abf53d008b4990ecc0381951d587f378979e1452aa15d7ccb6f0ff6fb84f49ebb1e4ad7fe010e08b2abc3fb78a7129c95e2ae0aee"
-        crossOrigin="anonymous"
-        alt="cover"
-        className="hidden"
-        onLoad={(e) => handlerUpload()}
-      />
-      <div className="bg-background absolute top-0 -z-10 size-full">
+    <div className="relative z-20 flex size-full h-full flex-col items-center pb-12 pt-20 text-primary">
+      <div className="absolute top-0 -z-10 size-full bg-background">
         <div className="absolute bottom-auto left-auto right-0 top-0 size-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div>
       </div>
       <div className="flex flex-col space-y-3">
@@ -144,7 +148,7 @@ export default function SummarizePage() {
           />
           <Button
             className="w-56 px-2"
-            onClick={handleSubmit}
+            onClick={handleGenerate}
             disabled={loading}
           >
             {loading ? (
@@ -375,7 +379,7 @@ export default function SummarizePage() {
               </div>
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center space-x-8">
             <Button
               className="w-56 px-2"
               onClick={downloadImage}
@@ -383,6 +387,49 @@ export default function SummarizePage() {
             >
               Download
             </Button>
+            <Dialog onOpenChange={handleOpenSubmitDialog}>
+              <DialogTrigger asChild>
+                <Button className="w-56 px-2" disabled={loading}>
+                  request to add webnav
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogDescription>
+                    Submit your website then it will included in webnav and show
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Category
+                    </Label>
+                    <Select
+                      value={chooseCategoryId}
+                      onValueChange={(value) => setChooseCategoryId(value)}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {categorys.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.title}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit" onClick={handleSubmit}>
+                    Submit
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       )}

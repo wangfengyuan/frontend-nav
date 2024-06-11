@@ -15,7 +15,7 @@ export default async function IndexPage() {
     }
   })
   return (
-    <div className="bg-background relative flex items-start justify-between">
+    <div className="relative flex items-start justify-between bg-background">
       <div className="sticky left-0 top-[65px] hidden h-full w-48 sm:block">
         <Sidebar navItems={navItems} />
       </div>
