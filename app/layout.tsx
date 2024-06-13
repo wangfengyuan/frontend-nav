@@ -36,7 +36,7 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const navResources = await getNavLinks()
-  const navItems = navResources.map((n) => {
+  const navItems = navResources.map((n: any) => {
     return {
       title: n.title,
       icon: n.icon,
@@ -49,7 +49,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <head />
         <body
           className={cn(
-            "bg-background min-h-screen font-sans antialiased",
+            "min-h-screen bg-background font-sans antialiased",
             fontSans.variable
           )}
         >

@@ -17,7 +17,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -42,7 +41,7 @@ enum BG_COLOR_TYPE {
 }
 
 export default function SummarizePage() {
-  const [url, setUrl] = useState("https://github.com")
+  const [url, setUrl] = useState("")
   const componentRef = useRef<HTMLDivElement | null>(null)
   const [loading, setLoading] = useState(false)
   const [categorys, setCategorys] = useState<Category[]>([])
@@ -54,7 +53,7 @@ export default function SummarizePage() {
     screenshot_url: "",
     randomColors: generateRandomGradient(),
     singleColor: "#14b8a6",
-    aspectRatio: "9/16",
+    aspectRatio: "3/4",
     showQrCode: false,
     font: "font-sans",
     bgColorType: BG_COLOR_TYPE.gradient,
@@ -75,11 +74,19 @@ export default function SummarizePage() {
         setLoading(true)
         const response = await fetch(`/api/summarize?url=${url}`)
         const res = await response.json()
-        setExportConfig({
-          ...exportConfig,
-          ...res,
-        })
-      } catch (error) {
+        if (res.error) {
+          toast({
+            title: "error occurred",
+            description: res.error,
+            variant: "destructive",
+          })
+        } else {
+          setExportConfig({
+            ...exportConfig,
+            ...res,
+          })
+        }
+      } catch (error: any) {
       } finally {
         setLoading(false)
       }
@@ -96,14 +103,13 @@ export default function SummarizePage() {
   }
   const downloadImage = async () => {
     const element = componentRef.current!
-    let data = await domtoimage.toPng(componentRef.current, {
+    let data = await domtoimage.toPng(componentRef.current as HTMLElement, {
       height: element.offsetHeight * 3,
       width: element.offsetWidth * 3,
       style: {
         transform: "scale(3)",
         transformOrigin: "top left",
       },
-      cacheDisable: true,
       cacheBust: true,
     })
     await saveImage(data)
@@ -149,7 +155,7 @@ export default function SummarizePage() {
         <div className="flex items-center space-x-3">
           <Input
             type="url"
-            placeholder="url"
+            placeholder="https://www.example.com"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
@@ -333,7 +339,7 @@ export default function SummarizePage() {
             >
               <div
                 className={cn(
-                  "flex items-center justify-center gap-6 rounded-lg bg-gradient-to-b p-8",
+                  "flex items-center justify-center gap-6 rounded-lg bg-gradient-to-br p-8",
                   isHorizontalOrientation ? "w-[720px]" : "w-[360px] flex-col",
                   exportConfig.bgColorType === BG_COLOR_TYPE.gradient
                     ? [...exportConfig.randomColors]
