@@ -47,7 +47,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head />
+        <head>
+          <GoogleAnalytics gaId="G-X2HC0NN1ZL" />
+        </head>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
@@ -63,7 +65,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             <TailwindIndicator />
             <Toaster />
           </ThemeProvider>
-          <GoogleAnalytics gaId="G-X2HC0NN1ZL" />
         </body>
       </html>
     </>
