@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useMemo } from "react"
+import { BG_COLOR, ExportConfig } from "@/types"
 import { useQRCode } from "next-qrcode"
 
 import { cn } from "@/lib/utils"
-import { BG_COLOR, ExportConfig } from "@/app/site-card/page"
 
 interface Props {
   exportConfig: ExportConfig

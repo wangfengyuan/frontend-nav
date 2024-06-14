@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react"
+import { BG_COLOR, ExportConfig } from "@/types"
 
 import { generateRandomGradient } from "@/lib/utils"
 import {
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { BG_COLOR, ExportConfig } from "@/app/site-card/page"
 
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"

@@ -2,6 +2,7 @@
 "use client"
 
 import { useCallback, useRef, useState } from "react"
+import { BG_COLOR, ExportConfig } from "@/types"
 import { Loader2 } from "lucide-react"
 
 import { generateRandomGradient } from "@/lib/utils"
@@ -12,27 +13,6 @@ import DownloadButton from "@/components/download-button"
 import ExportEditForm from "@/components/export-edit-form"
 import SiteCard from "@/components/site-card"
 import SubmitSiteButton from "@/components/submit-site-button"
-
-export enum BG_COLOR {
-  /** 渐变 */
-  gradient = "gradient",
-  /** 单色 */
-  single = "color",
-}
-
-export interface ExportConfig {
-  url: string
-  title: string
-  description: string
-  screenshot_url: string
-  randomColors: string[]
-  singleColor: string
-  aspectRatio: string
-  showQrCode: boolean
-  font: string
-  bgColorType: BG_COLOR
-  favicon: string
-}
 
 export default function SummarizePage() {
   const cardPreviewRef = useRef<HTMLDivElement | null>(null)

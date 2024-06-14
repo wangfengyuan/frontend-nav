@@ -1,8 +1,7 @@
 import { useState } from "react"
 import Image from "next/image"
+import { ExportConfig } from "@/types"
 import { Category } from "@prisma/client"
-
-import { ExportConfig } from "@/app/site-card/page"
 
 import { Button } from "./ui/button"
 import {
