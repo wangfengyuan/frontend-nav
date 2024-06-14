@@ -1,9 +1,9 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: "Next.js",
+  name: "WebNav",
   description:
-    "Beautifully designed components built with Radix UI and Tailwind CSS.",
+    "WebNav is a resource navigation website that collects excellent sites for front-end developers, and can also capture web page information with one click to generate shareable cards.",
   mainNav: [
     {
       title: "Generate Site Card",

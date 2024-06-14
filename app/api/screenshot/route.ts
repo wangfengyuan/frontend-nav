@@ -14,6 +14,8 @@ import {
 const chromium = require("@sparticuz/chromium-min")
 const puppeteer = require("puppeteer-core")
 
+export const maxDuration = 60
+
 export async function extractWebsiteInfo(url: string) {
   let browser = null
   try {

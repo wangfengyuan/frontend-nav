@@ -55,7 +55,7 @@ export default function SummarizePage() {
     singleColor: "#14b8a6",
     aspectRatio: "3/4",
     showQrCode: false,
-    font: "font-sans",
+    font: "font-serif",
     bgColorType: BG_COLOR_TYPE.gradient,
     favicon: "",
   })
@@ -103,16 +103,19 @@ export default function SummarizePage() {
   }
   const downloadImage = async () => {
     const element = componentRef.current!
-    let data = await domtoimage.toPng(componentRef.current as HTMLElement, {
-      height: element.offsetHeight * 3,
-      width: element.offsetWidth * 3,
-      style: {
-        transform: "scale(3)",
-        transformOrigin: "top left",
-      },
-      cacheBust: true,
-    })
-    await saveImage(data)
+    try {
+      let data = await domtoimage.toPng(element, {
+        height: element.offsetHeight * 3,
+        width: element.offsetWidth * 3,
+        style: {
+          transform: "scale(3)",
+          transformOrigin: "center center",
+        },
+      })
+      await saveImage(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
   const handleOpenSubmitDialog = async (open: boolean) => {
     if (!open) return
@@ -152,6 +155,9 @@ export default function SummarizePage() {
         <div className="absolute bottom-auto left-auto right-0 top-0 size-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div>
       </div>
       <div className="flex flex-col space-y-3">
+        <h1 className="mb-8 bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-3xl font-bold text-transparent">
+          Generate shareable web card with one click
+        </h1>
         <div className="flex items-center space-x-3">
           <Input
             type="url"
@@ -335,7 +341,6 @@ export default function SummarizePage() {
                 "relative mx-auto flex w-full items-center justify-center overflow-hidden",
                 exportConfig.font
               )}
-              ref={componentRef}
             >
               <div
                 className={cn(
@@ -345,6 +350,7 @@ export default function SummarizePage() {
                     ? [...exportConfig.randomColors]
                     : ""
                 )}
+                ref={componentRef}
                 style={{
                   aspectRatio: exportConfig.aspectRatio,
                   backgroundColor:
@@ -406,7 +412,7 @@ export default function SummarizePage() {
                   disabled={loading}
                   onClick={() => setOpenSubmitDialog(true)}
                 >
-                  request to add webnav
+                  request add to webnav
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">

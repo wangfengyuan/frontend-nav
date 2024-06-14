@@ -62,6 +62,14 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             <TailwindIndicator />
             <Toaster />
           </ThemeProvider>
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-X2HC0NN1ZL"></script>
+          <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-X2HC0NN1ZL');
+          </script>
         </body>
       </html>
     </>
