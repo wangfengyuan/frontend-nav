@@ -23,5 +23,5 @@ export interface ExportConfig {
   showQrCode: boolean
   font: string
   bgColorType: BG_COLOR
-  favicon: string
+  icon: string
 }

@@ -48,7 +48,7 @@ export async function GET(request: Request) {
   let res: any = {}
   try {
     res = JSON.parse(content)
-    const { screenshot } = urlRes!
+    const { screenshot, meta } = urlRes!
     const filename = `${slugify(url)}.png`
     const params = {
       Bucket: process.env.R2_BUCKET_NAME!,
@@ -58,7 +58,7 @@ export async function GET(request: Request) {
     }
     const uploadResult = await s3.upload(params).promise()
     res.screenshot_url = `${process.env.CDN_CUSTOM_DOMAIN}/${encodeURIComponent(filename)}`
-    console.log(uploadResult)
+    res.icon = meta.icon
     return NextResponse.json(res)
   } catch (error) {
     return NextResponse.json(

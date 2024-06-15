@@ -34,6 +34,7 @@ export async function getLinkByUniqueUrl(url: string) {
         description: true,
         screenshot_url: true,
         status: true,
+        is_crawled: true,
       },
       where: {
         url,

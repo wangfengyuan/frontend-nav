@@ -3,10 +3,15 @@
     <img alt="Example demo page" src="https://cos.codefe.top/images/webnav-screenshot-demo.png" width="680">
   </a>
 </p>
+<p align="center">
+  <a href="https://webnav.codefe.top/">
+    <img alt="Example demo page" src="https://static.codefe.top/2024/06/a0fd6c1ad67002f06e18dae22b0b3eb2.png" width="680">
+  </a>
+</p>
 
 ## WebNav
 
-Front-end navigation website, used to collect high-quality front-end related websites from both domestic and foreign sources for convenient personal use
+Front-end navigation website, used to collect high-quality front-end related websites from both domestic and foreign sources for convenient personal use, and can also capture web page information with one click to generate shareable cards.
 
 > This project is highly inspired by [Taxonomy](https://github.com/shadcn/taxonomy), For learning purpose, to learn how to build a modern app using Next.js 13(with many features like authentication, API routes, static pages for docs, orm, ...etc)
 
@@ -22,6 +27,8 @@ Front-end navigation website, used to collect high-quality front-end related web
 - ORM using **Prisma**
 - MySQL Database on **PlanetScale**
 - Written in **TypeScript**
+- Screenshot by use **Puppeteer**
+- call **Coze** Api
 
 ## Deploy Your Own
 You can clone & deploy it to Vercel with one click:
@@ -35,8 +42,6 @@ You can clone & deploy it to Vercel with one click:
 - [x] Authentication
 - [x] Adapt to mobile devices
 - [x] One click deploy
-- [ ] And animation by use Framer Motion 
-- [ ] User like and collection
 
 
 

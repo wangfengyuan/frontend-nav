@@ -42,7 +42,7 @@ export default function SubmitSiteButton(props: Props) {
   }
 
   const handleSubmit = async () => {
-    const { title, description, screenshot_url, favicon, url } = exportConfig
+    const { title, description, screenshot_url, icon, url } = exportConfig
     const response = await fetch("/api/links", {
       method: "POST",
       headers: {
@@ -54,7 +54,7 @@ export default function SubmitSiteButton(props: Props) {
         screenshot_url,
         cid: chooseCategoryId,
         url,
-        icon: favicon,
+        icon,
       }),
     })
     const res = await response.json()

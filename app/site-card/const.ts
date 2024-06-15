@@ -13,5 +13,5 @@ export const defaultExportConfig = {
   showQrCode: false,
   font: "font-serif",
   bgColorType: BG_COLOR.gradient,
-  favicon: "",
+  icon: "",
 }

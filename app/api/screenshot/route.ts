@@ -119,7 +119,7 @@ export async function extractWebsiteInfo(url: string) {
       meta: {
         title,
         description,
-        favicon,
+        icon: favicon,
         og_image: metadata["og:image"],
       },
     }

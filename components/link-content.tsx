@@ -1,11 +1,12 @@
 import Image from "next/image"
 import Link from "next/link"
+import { ExportConfig } from "@/types"
 import { Link as SiteLink } from "@prisma/client"
 import { Share2 } from "lucide-react"
 
 import { CategoryWithLinks } from "@/app/links"
 
-export function LinkItem({ link }: { link: SiteLink }) {
+export function LinkItem({ link }: { link: SiteLink | ExportConfig }) {
   return (
     <Link href={link.url} target="_blank">
       <div className="relative mb-6 flex min-h-[122px] min-w-0 cursor-pointer flex-col break-words rounded-lg border border-gray-200 p-4 shadow-md transition-all hover:-translate-y-1 hover:scale-105 hover:bg-border hover:shadow-lg  xl:mb-0">
@@ -29,7 +30,7 @@ export function LinkItem({ link }: { link: SiteLink }) {
             <span className="text-xl font-bold text-primary">{link.title}</span>
           </div>
           <div className="ml-auto flex items-center">
-            {link.is_crawled && (
+            {(link as any).is_crawled && (
               <Link href={`/site-card?url=${link.url}`} target="_blank">
                 <Share2 className="size-5" />
               </Link>
