@@ -24,4 +24,26 @@ export default async function getNavLinks() {
   return res
 }
 
+export async function getLinkByUniqueUrl(url: string) {
+  try {
+    const link = await prisma.link.findUnique({
+      select: {
+        title: true,
+        url: true,
+        icon: true,
+        description: true,
+        screenshot_url: true,
+        status: true,
+      },
+      where: {
+        url,
+      },
+    })
+    if (!link) {
+      return null
+    }
+    return link
+  } catch (error) {}
+}
+
 export type CategoryWithLinks = Prisma.PromiseReturnType<typeof getNavLinks>

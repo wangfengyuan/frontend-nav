@@ -15,7 +15,7 @@ import { UserAccountNav } from "./user-account-nav"
 export async function SiteHeader({ navItems }: SidebarProps) {
   const user = await getCurrentUser()
   return (
-    <header className="bg-background supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full pl-4 pr-6 backdrop-blur">
+    <header className="sticky top-0 z-40 w-full bg-background pl-4 pr-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className=" flex h-16 items-center sm:justify-between sm:space-x-0">
         <div className="block sm:hidden">
           <MainNav items={siteConfig.mainNav} navItems={navItems} />

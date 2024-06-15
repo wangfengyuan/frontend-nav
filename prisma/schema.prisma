@@ -31,12 +31,13 @@ model Link {
   description    String   @db.Text
   rank           Int?
   public         Boolean  @default(true)
-  status         Int      @default(1) @db.TinyInt
+  status         Int      @default(1) @db.TinyInt // 0: 未上架 1: 上架到导航页
   screenshot_url String   @default("")
   createdAt      DateTime @default(now()) @map(name: "created_at")
   updatedAt      DateTime @default(now()) @map(name: "updated_at")
   cid            String
   catagory       Category @relation(fields: [cid], references: [id])
+  is_crawled     Boolean  @default(false)
 
   @@map(name: "link")
 }

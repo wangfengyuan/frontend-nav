@@ -3,6 +3,7 @@ import Image from "next/image"
 import { ExportConfig } from "@/types"
 import { Category } from "@prisma/client"
 
+import { LinkItem } from "./link-content"
 import { Button } from "./ui/button"
 import {
   Dialog,
@@ -57,6 +58,14 @@ export default function SubmitSiteButton(props: Props) {
       }),
     })
     const res = await response.json()
+    if (res.error) {
+      toast({
+        title: "Error",
+        description: res.error,
+        variant: "destructive",
+      })
+      return
+    }
     toast({
       title: "Success",
       description: "Your site info has been submitted.",
@@ -71,43 +80,53 @@ export default function SubmitSiteButton(props: Props) {
           request add to webnav
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
           <DialogDescription>
             Submit your website then it will included in webnav and show
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Category
+        <div className="flex flex-col gap-4 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <Label htmlFor="name" className="w-[100px] text-center">
+              Category:
             </Label>
-            <Select
-              value={chooseCategoryId}
-              onValueChange={(value) => setChooseCategoryId(value)}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {categorys.map((item) => (
-                    <SelectItem key={item.id} value={item.id}>
-                      <div className="flex items-center">
-                        <Image
-                          src={item.icon}
-                          alt={item.title}
-                          width={24}
-                          height={24}
-                          className="mr-2"
-                        />
-                        {item.title}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div className="flex-1">
+              <Select
+                value={chooseCategoryId}
+                onValueChange={(value) => setChooseCategoryId(value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {categorys.map((item) => (
+                      <SelectItem key={item.id} value={item.id}>
+                        <div className="flex items-center">
+                          <Image
+                            src={item.icon}
+                            alt={item.title}
+                            width={24}
+                            height={24}
+                            className="mr-2"
+                          />
+                          {item.title}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="flex justify-between gap-4 self-start">
+            <Label htmlFor="name" className="w-[100px] text-center">
+              Preview:
+            </Label>
+            <div className="flex-1">
+              <LinkItem link={exportConfig} />
+            </div>
           </div>
         </div>
         <DialogFooter>
