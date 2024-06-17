@@ -8,7 +8,10 @@ import { CategoryWithLinks } from "@/app/links"
 
 export function LinkItem({ link }: { link: SiteLink | ExportConfig }) {
   return (
-    <Link href={link.url} target="_blank">
+    <Link
+      href={`${link.url}?utm_source=webnav&utm_medium=referral`}
+      target="_blank"
+    >
       <div className="relative mb-6 flex min-h-[122px] min-w-0 cursor-pointer flex-col break-words rounded-lg border border-gray-200 p-4 shadow-md transition-all hover:-translate-y-1 hover:scale-105 hover:bg-border hover:shadow-lg  xl:mb-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
