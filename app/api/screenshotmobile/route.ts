@@ -22,8 +22,15 @@ async function extractWebsiteInfo(url: string) {
             "--disable-blink-features=AutomationControlled",
             "--disable-features=site-per-process",
             "-disable-site-isolation-trials",
+            "--font-render-hinting=medium",
+            "--enable-font-antialiasing",
           ]
-        : [...chromium.args, "--disable-blink-features=AutomationControlled"],
+        : [
+            ...chromium.args,
+            "--disable-blink-features=AutomationControlled",
+            "--font-render-hinting=medium",
+            "--enable-font-antialiasing",
+          ],
       defaultViewport: { width: 375, height: 1080 },
       executablePath: isDev
         ? localExecutablePath
@@ -37,14 +44,12 @@ async function extractWebsiteInfo(url: string) {
 
     // 获取设备像素比
     const devicePixelRatio = 3
-
     const viewportWidth = 390
-    const initialHeight = 1080
 
-    // 设置初始viewport，考虑设备像素比
+    // 先设置一个较小的初始高度
     await page.setViewport({
       width: viewportWidth,
-      height: initialHeight,
+      height: 800,
       deviceScaleFactor: devicePixelRatio,
     })
 
@@ -53,32 +58,41 @@ async function extractWebsiteInfo(url: string) {
       timeout: 60000,
     })
 
-    // 等待所有图片加载完成
+    // 等待所有图片和字体加载完成
     await page.evaluate(() => {
-      return Promise.all(
-        Array.from(document.images)
-          .filter((img) => !img.complete)
-          .map(
-            (img) =>
-              new Promise((resolve) => {
-                img.onload = img.onerror = resolve
-              })
-          )
-      )
+      return Promise.all([
+        // 等待图片加载
+        Promise.all(
+          Array.from(document.images)
+            .filter((img) => !img.complete)
+            .map(
+              (img) =>
+                new Promise((resolve) => {
+                  img.onload = img.onerror = resolve
+                })
+            )
+        ),
+        // 等待字体加载
+        document.fonts.ready,
+      ])
     })
 
     const pageHeight = await page.evaluate(() => {
-      return Math.max(
-        document.documentElement.scrollHeight,
-        document.body.scrollHeight,
-        document.documentElement.clientHeight
-      )
+      // 获取页面主要内容区域的高度
+      const mainContent: any =
+        document.querySelector("#poster") || document.body
+
+      // 获取元素的完整高度，包括padding和border
+      const height = mainContent.getBoundingClientRect().height
+
+      // 考虑到可能的margin collapse，取最大值
+      return Math.max(height, mainContent.offsetHeight)
     })
 
     // 更新viewport高度，保持移动端宽度和设备像素比
     await page.setViewport({
       width: viewportWidth,
-      height: pageHeight,
+      height: parseInt(pageHeight),
       deviceScaleFactor: devicePixelRatio,
     })
 
@@ -112,7 +126,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const url = searchParams.get("url")
   const type = searchParams.get("type")
-  console.log("url", url)
   if (!url || !isValidUrl(url)) {
     return NextResponse.json(
       { error: "Missing required url parameter or url is invalid" },
