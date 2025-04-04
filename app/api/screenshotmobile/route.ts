@@ -35,12 +35,128 @@ async function extractWebsiteInfo(url: string) {
       executablePath: isDev
         ? localExecutablePath
         : await chromium.executablePath(remoteExecutablePath),
-      headless: isDev ? false : "new",
+      headless: "new",
       debuggingPort: isDev ? 9222 : undefined,
     })
 
     const page = await browser.newPage()
     await page.setUserAgent(userAgent)
+
+    const totalCount = 10
+    const seriesCount = 4
+    const totalValue = 123
+
+    const html = `
+        <html>
+          <head>
+            <style>
+              body {
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(180deg, #FFF5F5 0%, #FFE0E0 100%);
+                font-family: Arial, sans-serif;
+                width: 375px;
+                height: 600px;
+              }
+              .header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+              }
+              .avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                margin-right: 10px;
+              }
+              .title {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 10px;
+              }
+              .subtitle {
+                color: #666;
+                font-size: 14px;
+              }
+              .collection-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                margin: 20px 0;
+              }
+              .collection-item {
+                background: white;
+                border-radius: 8px;
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              .collection-item img {
+                width: 100%;
+                height: auto;
+              }
+              .stats {
+                display: flex;
+                justify-content: space-between;
+                margin: 20px 0;
+              }
+              .stat-item {
+                text-align: center;
+              }
+              .stat-value {
+                font-size: 24px;
+                font-weight: bold;
+                color: #FF6B6B;
+              }
+              .stat-label {
+                font-size: 12px;
+                color: #666;
+              }
+              .qrcode {
+                text-align: center;
+                margin-top: 20px;
+              }
+              .qrcode-text {
+                font-size: 12px;
+                color: #666;
+                margin-top: 10px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <img class="avatar" src="https://placeholder.com/50x50" alt="avatar">
+              <div>
+                <div class="title">迪藏家</div>
+                <div class="subtitle">已收藏${totalCount}个迪士尼玩偶</div>
+              </div>
+            </div>
+            <div class="title">我的迪士尼收藏</div>
+            <div class="subtitle">收藏于「迪藏家」小程序</div>
+            <div class="stats">
+              <div class="stat-item">
+                <div class="stat-value">${totalCount}</div>
+                <div class="stat-label">总数</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${seriesCount}</div>
+                <div class="stat-label">系列数</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${totalValue}</div>
+                <div class="stat-label">总价值</div>
+              </div>
+            </div>
+            <div class="qrcode">
+              <img src="https://placeholder.com/100x100" alt="qrcode">
+              <div class="qrcode-text">扫描二维码，记录你的迪士尼收藏</div>
+            </div>
+          </body>
+        </html>
+      `
+
+    await page.setContent(html)
 
     // 获取设备像素比
     const devicePixelRatio = 3
@@ -53,28 +169,23 @@ async function extractWebsiteInfo(url: string) {
       deviceScaleFactor: devicePixelRatio,
     })
 
-    await page.goto(url, {
-      waitUntil: ["load", "networkidle2"],
-      timeout: 60000,
-    })
+    // await page.goto(url, {
+    //   waitUntil: ["load", "networkidle2"],
+    //   timeout: 60000,
+    // })
 
     // 等待所有图片和字体加载完成
     await page.evaluate(() => {
-      return Promise.all([
-        // 等待图片加载
-        Promise.all(
-          Array.from(document.images)
-            .filter((img) => !img.complete)
-            .map(
-              (img) =>
-                new Promise((resolve) => {
-                  img.onload = img.onerror = resolve
-                })
-            )
-        ),
-        // 等待字体加载
-        document.fonts.ready,
-      ])
+      return Promise.all(
+        Array.from(document.images)
+          .filter((img) => !img.complete)
+          .map(
+            (img) =>
+              new Promise((resolve) => {
+                img.onload = img.onerror = resolve
+              })
+          )
+      )
     })
 
     const pageHeight = await page.evaluate(() => {
