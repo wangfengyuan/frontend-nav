@@ -24,12 +24,18 @@ async function extractWebsiteInfo(url: string) {
             "-disable-site-isolation-trials",
             "--font-render-hinting=medium",
             "--enable-font-antialiasing",
+            "--disable-gpu",
+            "--font-render-hinting=none",
+            "--force-color-profile=srgb",
           ]
         : [
             ...chromium.args,
             "--disable-blink-features=AutomationControlled",
             "--font-render-hinting=medium",
             "--enable-font-antialiasing",
+            "--disable-gpu",
+            "--font-render-hinting=none",
+            "--force-color-profile=srgb",
           ],
       defaultViewport: { width: 375, height: 1080 },
       executablePath: isDev
@@ -47,10 +53,18 @@ async function extractWebsiteInfo(url: string) {
     const totalValue = 123
 
     const html = `
-        <html>
+        <html lang="zh-CN">
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <head>
             <style>
+              @font-face {
+                font-family: 'PingFang SC';
+                src: local('PingFang SC');
+                font-display: swap;
+              }
               body {
+                font-family: 'PingFang SC', Arial, sans-serif;
                 margin: 0;
                 padding: 20px;
                 background: linear-gradient(180deg, #FFF5F5 0%, #FFE0E0 100%);
