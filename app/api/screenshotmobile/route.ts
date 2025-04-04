@@ -12,7 +12,7 @@ const puppeteer = require("puppeteer-core")
 
 export const maxDuration = 60
 
-export async function extractWebsiteInfo(url: string) {
+async function extractWebsiteInfo(url: string) {
   let browser = null
   try {
     browser = await puppeteer.launch({
@@ -99,7 +99,7 @@ export async function extractWebsiteInfo(url: string) {
   }
 }
 
-export const isValidUrl = (url: string) => {
+const isValidUrl = (url: string) => {
   try {
     new URL(url)
     return true
