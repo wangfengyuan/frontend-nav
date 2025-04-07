@@ -11,6 +11,7 @@ const nextConfig = {
   images: {
     domains: ["cos.codefe.top", "webnav-cdn.codefe.top"],
   },
+  output: "standalone",
 }
 
 export default nextConfig
